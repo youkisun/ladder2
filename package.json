@@ -1,0 +1,10 @@
+{
+  "name": "ladder",
+  "uuid": "ca4a122f-59e6-4be1-9fca-24f1c11d4912",
+  "creator": {
+    "version": "3.8.5"
+  },
+  "dependencies": {
+    "seedrandom": "^3.0.5"
+  }
+}
