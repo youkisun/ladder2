@@ -281,7 +281,8 @@ export class MissionContext {
     }
 
     private onXAccountPopup() {
-        GameAudioManger.getDefaultInstance().playSound("button");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().playSound("button");
         const node = GameUIManager.getDefaultInstance().load(UIType.ENTER_TEXT_PANEL);
         if (node) {
             const uiEnterTextPanel = node.getComponent(UIEnterTextPanel);
@@ -515,7 +516,8 @@ export class UIMissionItem extends Component {
 
         if (this.copyLinkButton != null) {
             this.copyLinkButton.node.on(Button.EventType.CLICK, () => {
-                GameAudioManger.getDefaultInstance().playSound("button");
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().playSound("button");
                 if (this.onClickCopyLinkEvent != null)
                     this.onClickCopyLinkEvent();
             }, this);
@@ -523,7 +525,8 @@ export class UIMissionItem extends Component {
 
         if (this.shareLinkButton != null) {
             this.shareLinkButton.node.on(Button.EventType.CLICK, () => {
-                GameAudioManger.getDefaultInstance().playSound("button");
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().playSound("button");
                 if (this.onClickShareLinkEvent != null)
                     this.onClickShareLinkEvent();
             }, this);
@@ -531,7 +534,8 @@ export class UIMissionItem extends Component {
 
         if (this.subscribeButton != null) {
             this.subscribeButton.node.on(Button.EventType.CLICK, () => {
-                GameAudioManger.getDefaultInstance().playSound("button");
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().playSound("button");
                 if (this.onClickSubscribeEvent != null)
                     this.onClickSubscribeEvent();
             }, this);
@@ -539,7 +543,8 @@ export class UIMissionItem extends Component {
 
         if (this.xAccountPopupButton != null) {
             this.xAccountPopupButton.node.on(Button.EventType.CLICK, () => {
-                GameAudioManger.getDefaultInstance().playSound("button");
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().playSound("button");
                 if (this.onClickXAccountPopupEvent != null)
                     this.onClickXAccountPopupEvent();
             }, this);

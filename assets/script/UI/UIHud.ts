@@ -66,7 +66,7 @@ export class UIHud extends DefaultComponent<UIHud> {
     protected onLoad() {
         super.onLoad();
         this.setShowWaitPopup(false);
-        this.showLoading(true);
+        this.showLoading(false);
         this.debugLog.active = false;
         
         this.debugButton.node.on(Button.EventType.CLICK, ()=>

@@ -28,6 +28,8 @@ export class GameLobby extends Component {
         this.uiLobby.onClickPlayMemeRunDisableButton = this.onClickMemeRunDisableButtonEvent.bind(this);
         this.uiLobby.onClickMemeNewGameButtonEvent = this.onClickMemeNewGameButtonEvent.bind(this);
 
+        this.uiLobby.setActiveMemeRunButton(GameMainContext.getDefault().initPacket.air_cnt > 0);
+
         if(GameLobby.isInit == false)
         {
             GameNetwork.getDefaultInstance().sendReqInitReq((initLobbyPacket) => {

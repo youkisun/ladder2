@@ -50,7 +50,8 @@ export class UIAttendanceBonus extends DefaultComponent<UIAttendanceBonus> {
     }
 
     private onCloseBtn() {
-        GameAudioManger.getDefaultInstance().playSound("button");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().playSound("button");
         GameUIManager.getDefaultInstance().hide(UIType.ATTENDANCE_BONUS);
     }
 

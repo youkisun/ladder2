@@ -33,8 +33,8 @@ export class GameResultState extends GameState {
         if (mainContext.resultContext.gameNo != curGameNo) {
 
             if (remainTime > 5) {
-                UIHud.getDefaultInstance().showLoading(true);
-                GameStateManager.getDefaultInstance().onCheckSendResultReq();
+                //UIHud.getDefaultInstance().showLoading(true);
+                //GameStateManager.getDefaultInstance().onCheckSendResultReq();
             }
             else {
                 uiHud.uiAlaram.showStatusMessage(false);
@@ -60,7 +60,7 @@ export class GameResultState extends GameState {
                 GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_ARRIVE, 1);
             }
 
-            UIHud.getDefaultInstance().showLoading(false);
+            //UIHud.getDefaultInstance().showLoading(false);
             uiHud.setShowWaitPopup(false);
             if (GameMainContext.getDefault().betActor != 0) {
                 const isVictory = GameMainContext.getDefault().resultContext.isWin;
@@ -72,7 +72,8 @@ export class GameResultState extends GameState {
 
                 }
                 else {
-                    GameAudioManger.getDefaultInstance().playSound("lose");
+                    if (GameAudioManger.getDefaultInstance() != null)
+                        GameAudioManger.getDefaultInstance().playSound("lose");
                 }
                 // If consecutive wins exist, display the consecutive win message after 5 seconds.
                 // this.continueCountTick = remainTime - 5;

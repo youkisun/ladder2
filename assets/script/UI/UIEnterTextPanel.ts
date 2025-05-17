@@ -45,15 +45,18 @@ export class UIEnterTextPanel extends Component {
 
     start() {
         this.pastButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.pasteButtonEvent();
         }, this);
         this.applyButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.applyButtonEvent();
         }, this);
         this.closeButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.closeButtonEvent();
         }, this);
         this.adressEditBox.node.on('text-changed', this.onTextChangedEvent, this);

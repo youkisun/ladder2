@@ -93,7 +93,8 @@ export class GameActorControl extends DefaultComponent<GameActorControl> {
             if( rightActor && leftActor )
             {
                 this.SetActorState(ActorState.ACTOR_STATE_ARRIVE);
-                GameAudioManger.getDefaultInstance().stopSound("walk");
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().stopSound("walk");
                 const uiPath = UIPath.getDefaultInstance();
                 uiPath.showResultCoin(true, GameMainContext.getDefault().resultContext.winResultPos, 1);
             }

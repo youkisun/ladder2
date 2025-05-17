@@ -24,7 +24,8 @@ export class UIPopup extends Component {
 
     start() {
         this.closeButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             GameUIManager.getDefaultInstance().hide(UIType.POPUP);
         }, this);
 

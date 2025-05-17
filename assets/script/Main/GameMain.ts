@@ -83,8 +83,6 @@ export class GameMain extends DefaultComponent<GameMain> {
         }, true);
 
         let uiHud = UIHud.getDefaultInstance();
-        GameNetwork.getDefaultInstance().SendInitReq(true);
-
         uiHud.uiBottomMenu.onClickInGameBtn = this.onClickInGameBtn.bind(this);
         uiHud.uiBottomMenu.onClickHomeBtn = this.onClickHomeBtn.bind(this);
         uiHud.uiBottomMenu.onClickHistoryBtn = this.onClickHistoryBtn.bind(this);
@@ -106,7 +104,8 @@ export class GameMain extends DefaultComponent<GameMain> {
                 console.error("Failed to load scene:", err);
                 return;
             }
-            GameAudioManger.getDefaultInstance().stopAll();
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().stopAll();
             console.log("Scene loaded successfully:", scene);
         });
     }
@@ -161,14 +160,8 @@ export class GameMain extends DefaultComponent<GameMain> {
     private onBackgroundToGame() {
         Logger.log("Game is back in the foreground.");
         let stateMgr = GameStateManager.getDefaultInstance();
-         if (stateMgr.getCurrentGameNo() != GameMainContext.getDefault().initPacket.cur_game_no)
-        {
-            GameNetwork.getDefaultInstance().SendInitReq(true);
-        }
-        else {
-            stateMgr.RefreshTimeState();
+        stateMgr.RefreshTimeState();
             stateMgr.playState(true);
-        }
     }
 
     update(deltaTime: number) {

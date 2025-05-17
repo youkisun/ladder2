@@ -35,12 +35,14 @@ export class UIRouletteResult extends Component {
 
     start() {
         this.closeButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.hide();
         }, this);
 
         this.backSpriteButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.hide();
         }, this);
     }

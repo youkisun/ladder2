@@ -42,13 +42,15 @@ export class UIMyInformation extends Component {
         }
 
         this.closeButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             GameUIManager.getDefaultInstance().hide(UIType.MY_INFORMATION);
         }, this);
     }
 
     private onClickTabButton(index: number) {
-        GameAudioManger.getDefaultInstance().playSound("button");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().playSound("button");
         this.unSelectedAll();
         this.tabButtonSelecteds[index].active = true;
         this.tabPanels[index].active = true;

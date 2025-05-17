@@ -109,10 +109,10 @@ export class GameUserBetState extends DefaultComponent<GameUserBetState> {
     }
 
     public play(remainTime: number, init: boolean) {
-        if (GameMainContext.getDefault().isInit == false) {
-            this.hide();
-            return;
-        }
+        // if (GameMainContext.getDefault().isInit == false) {
+        //     this.hide();
+        //     return;
+        // }
 
         if (init)
             UIHud.getDefaultInstance().uiUserBetState.init();

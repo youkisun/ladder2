@@ -39,8 +39,9 @@ export class UIBonusRoulette extends DefaultComponent<UIBonusRoulette> {
 
         this.spinButton.node.on(Button.EventType.CLICK, ()=>
         {
-            
-            GameAudioManger.getDefaultInstance().playSound("button");
+
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             if( this.onClickSpinBtn() )
             {
                 this.setActiveAllInteraction(false);
@@ -49,7 +50,8 @@ export class UIBonusRoulette extends DefaultComponent<UIBonusRoulette> {
 
         this.closeButton.node.on(Button.EventType.CLICK, ()=>
         {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.hide();
         }, this);
 

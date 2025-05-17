@@ -16,7 +16,8 @@ export class UITopMsgAlaram extends Component {
     protected onLoad(): void {
 
         this.closeButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             GameUIManager.getDefaultInstance().hide(UIType.TOP_MSG_ALARAM);
         }, this);
 

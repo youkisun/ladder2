@@ -15,7 +15,7 @@ export class GameSystemFile {
     private static DEFAULT_URL: string = "https://asdfasdf7777777.fun";
     private static JSON_FILE_PATH: string = "system.json";
 
-    private static forceEditor: boolean = false;
+    private static forceEditor: boolean = true;
 
     public static getWebUrl(): string {
         if (EDITOR || this.forceEditor) {            

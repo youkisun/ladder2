@@ -1,10 +1,12 @@
 import { _decorator, Component, director, Node } from 'cc';
 import { GameMain } from './GameMain';
 import { GameMainContext } from './GameMainContext';
+import { GameNetwork } from '../Network/GameNetwork';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameLoadingInGame')
 export class GameLoadingScene extends Component {
+    private static _initReqSent: boolean = false;
 
     @property({ type: Node })
     private rootNode: Node;
@@ -18,6 +20,11 @@ export class GameLoadingScene extends Component {
     protected onLoad(): void {
         if (this.rootNode != null)
             this.rootNode.active = false;
+
+        if (!(GameLoadingScene as any)._initReqSent) {
+            GameNetwork.getDefaultInstance().SendInitReq(true);
+            (GameLoadingScene as any)._initReqSent = true;
+        }
     }
 
     start() {

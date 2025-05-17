@@ -33,7 +33,8 @@ export class UIHudRoulette extends DefaultComponent<UIHudRoulette> {
 
     start() {
         this.openButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickOpenRouletteButton();
         }, this);
 

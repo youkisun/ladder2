@@ -45,7 +45,8 @@ export class UIBottomMenu extends Component {
     protected onLoad(): void {
 
         this.inGameButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickInGameBtn();
 
             this.ingameButtonPressed.active = false;
@@ -65,7 +66,8 @@ export class UIBottomMenu extends Component {
             this.myInfoButtonPressed.active = false;
             this.storeButtonPressed.active = false;
             this.homeButtonPressed.active = true;
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickHomeBtn();
 
 
@@ -78,7 +80,8 @@ export class UIBottomMenu extends Component {
             this.myInfoButtonPressed.active = false;
             this.storeButtonPressed.active = false;
             this.homeButtonPressed.active = false;
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickHistoryBtn();
 
         }, this);
@@ -90,7 +93,8 @@ export class UIBottomMenu extends Component {
             this.myInfoButtonPressed.active = true;
             this.storeButtonPressed.active = false;
             this.homeButtonPressed.active = false;
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickMyInfoBtn();
 
         }, this);
@@ -102,7 +106,8 @@ export class UIBottomMenu extends Component {
             this.myInfoButtonPressed.active = false;
             this.storeButtonPressed.active = false;
             this.homeButtonPressed.active = false;
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             if (this.onClickWalletBtn != null)
                 this.onClickWalletBtn();
 
@@ -117,7 +122,8 @@ export class UIBottomMenu extends Component {
             this.myInfoButtonPressed.active = false;
             this.storeButtonPressed.active = false;
             this.homeButtonPressed.active = false;
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             if (this.onClickStoreBtn != null)
                 this.onClickStoreBtn();
 

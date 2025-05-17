@@ -45,10 +45,7 @@ export class GameCountDownState extends GameState {
 
         switch (this.curState) {
             case CountDownStateType.RESULT_REQ:
-                if (this.remainTime < this.sendResultRemainTime) {
-                    this.curState = CountDownStateType.FINISH;
-                    GameStateManager.getDefaultInstance().onCheckSendResultReq();
-                }
+                this.curState = CountDownStateType.FINISH;                
                 break;
         }
 

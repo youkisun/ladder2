@@ -52,8 +52,9 @@ export class RouletteSpin extends Component {
             this._targetAngle = targetAngle;
             this._spinTimeElapsed = 0;
             this._isSpinning = true;
-            
-            GameAudioManger.getDefaultInstance().playSound("roulletPlay");
+
+            if (GameAudioManger.getDefaultInstance() != null)            
+                GameAudioManger.getDefaultInstance().playSound("roulletPlay");
             this._totalRotation = (360 * this.speed) + this._targetAngle;
         }
     }

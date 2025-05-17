@@ -40,19 +40,20 @@ export class GameBettingState extends GameState {
 
         this.isInit = true;
 
-        if (GameMainContext.getDefault().airdropCredit <= 0) {
+        //if (GameMainContext.getDefault().airdropCredit <= 0) {
 
-            const node = GameUIManager.getDefaultInstance().load(UIType.POPUP);
-            if (node) {
-                const uiPopup = node.getComponent(UIPopup);
-                uiPopup.set("Daily airdrop credits used.\nTry again later", "Notice", false, true);
-                uiPopup.onClickConfirmButtonEvent = this.onGotoLobby.bind(this);
-            }
-        }
+        //    const node = GameUIManager.getDefaultInstance().load(UIType.POPUP);
+        //    if (node) {
+        //        const uiPopup = node.getComponent(UIPopup);
+        //        uiPopup.set("Daily airdrop credits used.\nTry again later", "Notice", false, true);
+        //        uiPopup.onClickConfirmButtonEvent = this.onGotoLobby.bind(this);
+        //    }
+        //}
     }
 
     private onGotoLobby() {
-        GameAudioManger.getDefaultInstance().stopAll();
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().stopAll();
         director.loadScene("lobbyScene", (err, scene) => {
             if (err) {
                 console.error("Failed to load scene:", err);

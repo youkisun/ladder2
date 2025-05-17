@@ -47,7 +47,8 @@ export class GameBettingControl extends DefaultComponent<GameBettingControl> {
     }
 
     private onClickBetActorButtonEvent(betActorArrayIndex: number) {
-        GameAudioManger.getDefaultInstance().playSound("button");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().playSound("button");
         this.selectedActor = betActorArrayIndex + 1;
         let uiHud = UIHud.getDefaultInstance();
         uiHud.uiBetMenu.setBetActorButtonUI(betActorArrayIndex);
@@ -63,7 +64,8 @@ export class GameBettingControl extends DefaultComponent<GameBettingControl> {
     }
 
     private onClickBetAmountBtnEvent(amount: number) {
-        GameAudioManger.getDefaultInstance().playSound("button");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().playSound("button");
         this.betAmount += amount;
         if (this.isCanBetAmount()) {
             let uiHud = UIHud.getDefaultInstance();
@@ -77,7 +79,8 @@ export class GameBettingControl extends DefaultComponent<GameBettingControl> {
     }
 
     private onClickBetBtnEvent() {
-        GameAudioManger.getDefaultInstance().playSound("button");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().playSound("button");
 
         if (this.isCanBetAmount() == false)
             return;

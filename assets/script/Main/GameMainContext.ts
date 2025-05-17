@@ -310,12 +310,12 @@ export class GameMainContext extends Default<GameMainContext> {
         }
     }
 
-    public setBetActorAndAmount(betActor: number, betAmount: number) {
+    public setBetActorAndAmount(betActor: number) {
         if (UISelectActorAlarmTab.getDefaultInstance() != null)
-            UISelectActorAlarmTab.getDefaultInstance().showBetActorUI(betActor, betAmount);
+            UISelectActorAlarmTab.getDefaultInstance().showBetActorUI(betActor, 0);
 
         this.setBetActor(betActor);
-        this.setBetAmount(betAmount);
+        //this.setBetAmount(betAmount);
     }
 
     public setBetActor(betActor: number) {
@@ -387,7 +387,7 @@ export class GameMainContext extends Default<GameMainContext> {
     public setOnSetInit(initPacket: GameInitPacket, isInitialize: boolean) {
         const gameStateMgr = GameStateManager.getDefaultInstance();
         this.initPacket = initPacket;        
-        this.setTonPoint(initPacket.t_points);
+        //this.setTonPoint(initPacket.t_points);
         this.setTonAddress(initPacket.ton_addr);
         this.setUID(initPacket.t_id);
         this.setRoulettePoint(initPacket.roulette_points);
@@ -407,7 +407,7 @@ export class GameMainContext extends Default<GameMainContext> {
 
             // Display the bet amount/actor.
             if (initPacket.lastBetInfo.last_bet_game_no == gameStateMgr.getCurrentGameNo()) {
-                this.setBetActorAndAmount(initPacket.lastBetInfo.last_bet_winner, initPacket.lastBetInfo.last_bet_t_points);
+                this.setBetActorAndAmount(initPacket.lastBetInfo.last_bet_winner);
 
                 if (initPacket.cur_game_mode == gameStateMgr.STATE_BETTING) {
                     GameBettingControl.getDefaultInstance().setCurrentBetStatus(initPacket.lastBetInfo.last_bet_t_points, initPacket.lastBetInfo.last_bet_winner);
@@ -429,23 +429,6 @@ export class GameMainContext extends Default<GameMainContext> {
                     }
                 }
             }
-            // else
-            // {
-            //     if (initPacket.cur_game_mode != gameStateMgr.STATE_BETTING) {
-            //         //GameBettingControl.getDefaultInstance().setRefreshUI();
-            //         if(UISelectActorAlarmTab.getDefaultInstance() != null)
-            //             UISelectActorAlarmTab.getDefaultInstance().node.active = false;
-
-            //         //if(GameBettingControl.getDefaultInstance() != null)
-            //         //    GameBettingControl.getDefaultInstance().hide();
-            //     }
-            //     else
-            //     {
-                    
-            //     }
-            // }
-
-
 
             this.setUserName(initPacket.nick);
 
@@ -489,11 +472,10 @@ export class GameMainContext extends Default<GameMainContext> {
     }
 
     public setOnBetPacket(betPacket: GameBetPacket) {
-        this.setTonPoint(betPacket.left_t_points);
-        this.setBetActorAndAmount(betPacket.bet_winner, betPacket.bet_t_points);
-        this.setAirDropCredit(betPacket.left_air_cnt);
+        this.setBetActorAndAmount(betPacket.bet_winner);
+        this.setAirDropCredit(betPacket.ret_air_cnt);
 
-        GameTimeManager.getInstance().setServerTime(betPacket.server_t_stamp);
+        //GameTimeManager.getInstance().setServerTime(betPacket.server_t_stamp);
     }
 
     public setOnResultPacket(resultPacket: GameResultPacket) {
@@ -505,7 +487,7 @@ export class GameMainContext extends Default<GameMainContext> {
         this.resultContext.setPath(resultPacket.bridge_num);
 
         Logger.log("SET WINNER :" + resultPacket.winner);
-        GameTimeManager.getInstance().setServerTime(resultPacket.server_t_stamp);
+        //GameTimeManager.getInstance().setServerTime(resultPacket.server_t_stamp);
     }
 
     public clearGameRound() {

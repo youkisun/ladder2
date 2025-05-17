@@ -10,10 +10,7 @@ import { GameTimeManager } from '../Utils/GameTimeManager';
 import { GameInitPacket } from '../Network/GamePacket';
 import { UIHud } from '../UI/UIHud';
 import { GameNetwork } from '../Network/GameNetwork';
-import { UIPath } from '../UI/UIPath';
-import { GameUserBetState } from '../UserBetState/GameUserBetState';
 import { GameRandom } from '../Utils/GameRandom';
-import { GameAudioManger } from './GameAudioManger';
 import { Logger } from '../Common/GameCommon';
 const { ccclass, property } = _decorator;
 
@@ -61,13 +58,13 @@ export class GameStateManager extends DefaultComponent<GameStateManager> {
     }
 
     start() {
-
+        this.onFinishState();
     }
 
     update(deltaTime: number) {
 
-        if (GameMainContext.getDefault().isGameStop)
-            return;
+        //if (GameMainContext.getDefault().isGameStop)
+        //    return;
 
         if (this._gameState[this.getState()] != null)
             this._gameState[this.getState()].onUpdate(deltaTime);
@@ -121,9 +118,7 @@ export class GameStateManager extends DefaultComponent<GameStateManager> {
     ];
 
     public setInit(packet: GameInitPacket, isInitialize: boolean = false) {
-        GameTimeManager.getInstance().setServerTime(packet.server_t_stamp);
-
-
+        //GameTimeManager.getInstance().setServerTime(packet.server_t_stamp);
         if (isInitialize) {
             if (this._curState != -1) {
                 this._gameState[this._curState].onCloseState();
@@ -175,7 +170,8 @@ export class GameStateManager extends DefaultComponent<GameStateManager> {
             this._remainTime = this.totalPlayTime() - curPlayTime;
         }
 
-        this.onSetRoundEvent(currentRound);
+        if(this.onSetRoundEvent != null)
+            this.onSetRoundEvent(currentRound);
         //this.getCurrentGameNo() = this.GetGameNumber(currentRound);
         this.currentRound = currentRound;
     }
@@ -232,11 +228,6 @@ export class GameStateManager extends DefaultComponent<GameStateManager> {
 
     public playState(isForce: boolean = false): void {
 
-        if(GameMainContext.getDefault().isInit == false)
-        {
-            return;
-        }
-
         const formatter = new Intl.DateTimeFormat("ko-KR", {
             timeZone: "UTC",
             year: "numeric",
@@ -285,71 +276,10 @@ export class GameStateManager extends DefaultComponent<GameStateManager> {
     private onFinishState(): void {
         this.RefreshTimeState();
         this.playState();
-        this.onCheckSendInitReq();
+        
     }
 
-    public onForceRefreshState() {
-        this.RefreshTimeState();
-        this.playState(true);
-    }
-
-    private sendInitTimeId: number = -1;
-
-    public onCheckSendInitReq() {
-
-        if (this._curState == this.STATE_BETTING ||
-            this._curState == this.STATE_COUNT_DOWN) {
-
-            if (this.getCurrentGameNo() != GameMainContext.getDefault().initPacket.cur_game_no) {
-                if (this.sendInitTimeId != -1) {
-                    clearTimeout(this.sendInitTimeId);
-                    this.sendInitTimeId = -1;
-                }
-
-                const random = new GameRandom();
-                // Send a packet between 1 and 2 seconds.
-                const delay = random.nextInRange(100, 1200);
-                this.sendInitTimeId = setTimeout(() => {
-
-                    const formatter = new Intl.DateTimeFormat("ko-KR", {
-                        timeZone: "UTC",
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: false
-                    });
-                    let utcTime = formatter.format(new Date()).replace(/[^0-9]/g, "");
-                    console.log(`[STATE] sendInit - utc : ${utcTime}`);
-
-
-                    GameNetwork.getDefaultInstance().SendInitReq();
-                    this.sendInitTimeId = -1;
-                }, delay);
-            }
-        }
-    }
-
-    public onCheckSendResultReq() {
-        const mainContext = GameMainContext.getDefault();
-        const curGameNo = this.getCurrentGameNo();
-
-        if (mainContext.resultContext.gameNo == curGameNo)
-            return;
-
-        GameNetwork.getDefaultInstance().sendResultReq(curGameNo,
-            (resultPacket) => {
-
-                Logger.log("Received result response:", resultPacket);
-                mainContext.setOnResultPacket(resultPacket);
-
-                if (this.getState() == this.STATE_PLAY || this.getState() == this.STATE_RESULT) {
-                    Logger.log("force onFinishState");
-                    GameStateManager.getDefaultInstance().onForceRefreshState();
-                }
-
-            });
+    protected onDisable(): void {
+        
     }
 }

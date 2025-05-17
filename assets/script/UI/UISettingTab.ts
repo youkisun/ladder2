@@ -61,17 +61,20 @@ export class UISettingTab extends DefaultComponent<UISettingTab> {
 
     start() {
         this.tonAdressEditButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickChangeTonAdress();
         }, this);
 
         this.solAdressEditButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickChangeSolAdress();
         }, this);
 
         this.changeNickNameEditButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onClickChangeNickName();
         }, this);
 
@@ -86,12 +89,14 @@ export class UISettingTab extends DefaultComponent<UISettingTab> {
         this.soundOffCheck.node.active = !this.soundCheckOn;
 
         this.soundOnButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onSoundToggle(true);
         }, this);
 
         this.soundOffButton.node.on(Button.EventType.CLICK, () => {
-            GameAudioManger.getDefaultInstance().playSound("button");
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().playSound("button");
             this.onSoundToggle(false);
         }, this);
     }
@@ -109,7 +114,8 @@ export class UISettingTab extends DefaultComponent<UISettingTab> {
         this.soundOffCheck.node.active = !isOn;
 
         GameNetwork.getDefaultInstance().sendUpdateSoundReq(isOn ? 1 : 0, () => {
-            GameAudioManger.getDefaultInstance().setMute(!isOn);
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().setMute(!isOn);
         });
     }
 

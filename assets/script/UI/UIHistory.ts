@@ -16,7 +16,8 @@ export class UIHistory extends Component {
 
     protected onLoad(): void {
         this.closeButton.node.on(Button.EventType.CLICK, ()=>
-            { 
+        { 
+            if (GameAudioManger.getDefaultInstance() != null)
                 GameAudioManger.getDefaultInstance().playSound("button");
                 GameUIManager.getDefaultInstance().hide(UIType.HISTORY);
             }, this);

@@ -99,7 +99,8 @@ export class UIWinGetPointsTab extends DefaultComponent<UIWinGetPointsTab> {
                 GameAddCoinControl.getDefault().startAddRun(mainContext.runPoint);
                 GameAddCoinControl.getDefault().startRoulette(GameMainContext.getDefault().roulettePoint);
 
-                GameAudioManger.getDefaultInstance().playSound("roulletPlay");
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().playSound("roulletPlay");
                 //let loopCount = GameCommon.getTonCoinEffectCount(getTonPoint);
                 let loopCount = getRunPoint;
                 for (let i = 0; i < loopCount; i++) {
@@ -148,7 +149,8 @@ export class UIWinGetPointsTab extends DefaultComponent<UIWinGetPointsTab> {
                 this.timeoutIds.push(timeoutId);
 
                 const winSoundTimeoutId = setTimeout(() => {
-                    GameAudioManger.getDefaultInstance().stopSound("roulletPlay");
+                    if (GameAudioManger.getDefaultInstance() != null)
+                        GameAudioManger.getDefaultInstance().stopSound("roulletPlay");
                 }, 2000);
                 this.timeoutIds.push(winSoundTimeoutId);
 

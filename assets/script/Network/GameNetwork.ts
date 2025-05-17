@@ -49,9 +49,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
 
     public SendInitReq(isInitialize: boolean = false) {
         Logger.log(`[INIT_REQ] SendInitReq`);
-
         this.setDebugLog(`-SendInitReq- init:${isInitialize}`, GameStateManager.getDefaultInstance().getCurrentGameNo());
-
         this._sendInitReq(isInitialize, (initPacket) => {
 
             if (initPacket.err_code != 0) {
@@ -59,12 +57,13 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
                 Logger.error(errorMsg);
                 GameMainContext.getDefault().isInit = false;
                 GameMainContext.getDefault().CheckErrorAlert(initPacket.err_code, initPacket.err_msg, initPacket.err_act);
-                UIHud.getDefaultInstance().showLoading(false);
+                //UIHud.getDefaultInstance().showLoading(false);
                 return;
             }
 
             if (isInitialize) {
-                GameAudioManger.getDefaultInstance().setMute(initPacket.sound_on > 0 ? false : true);
+                if (GameAudioManger.getDefaultInstance() != null)
+                    GameAudioManger.getDefaultInstance().setMute(initPacket.sound_on > 0 ? false : true);
             }
 
             const gameStateMgr = GameStateManager.getDefaultInstance();
@@ -73,21 +72,12 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
             Logger.log(`[INIT_REQ] Initialization successful: initPacket:${initPacket}`);
 
             GameMainContext.getDefault().setOnSetInit(initPacket, isInitialize);
-
-            // // Display an error if the client and server game numbers do not match
-            // if(GameStateManager.getDefaultInstance().getCurrentGameNo() != initPacket.cur_game_no)
-            // {
-            //     initPacket.err_code = 11;
-            //     GameMainContext.getDefault().CheckErrorAlert(initPacket.err_code);
-            //     GameMainContext.getDefault().isInit = false;
-            // }
-
             GameMainContext.getDefault().isInit = true;
 
-            if (isInitialize) {
-                gameStateMgr.playState();
-                UIHud.getDefaultInstance().showLoading(false);
-            }
+            //if (isInitialize) {
+            //    //gameStateMgr.playState();
+            //    UIHud.getDefaultInstance().showLoading(false);
+            //}
 
             UIHud.getDefaultInstance().uiRecordInform.setRecordItems();
 
@@ -99,13 +89,13 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         UIHud.getDefaultInstance().setErrorMessageLabel("sendInitReq");
         let initValue = isInitialize ? 1 : 0;
         
-        this.postRequest.sendInGamePostRequest("/game/reqinitgame", { type: 100, st_init: initValue }, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/reqinitgame", { type: 100, st_init: initValue }, (response, elapsedTime) => {
             const parsedResponse = new GameInitPacket(response);
 
-            if(parsedResponse.suc)
-            {
-                parsedResponse.correctTimeStamp(elapsedTime);    
-            }
+            //if(parsedResponse.suc)
+            //{
+            //    parsedResponse.correctTimeStamp(elapsedTime);    
+            //}
             
             callback(parsedResponse);
         });
@@ -117,7 +107,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendBetReq" + params);
         Logger.log('[BET_REQ] sendBetReq', params);
-        this.postRequest.sendInGamePostRequest("/game/reqbetgame", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/reqbetgame", params, (response, elapsedTime) => {
             const parsedResponse = new GameBetPacket(response);
 
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
@@ -125,25 +115,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
             if(!parsedResponse.suc)
                 return;
 
-            parsedResponse.correctTimeStamp(elapsedTime);
-            callback(parsedResponse);
-        });
-    }
-
-    public sendResultReq(game_no_value: number, callback: (gameResultPacket: GameResultPacket) => void) {
-        let params = { type: 102, game_no: game_no_value };
-        Logger.log('[RESULT_REQ] sendResultReq', params);
-
-        this.setDebugLog("sendResultReq - ", game_no_value);
-
-        UIHud.getDefaultInstance().setErrorMessageLabel("sendResultReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/reqgetresult", params, (response, elapsedTime) => {
-            const parsedResponse = new GameResultPacket(response);
-            parsedResponse.correctTimeStamp(elapsedTime);            
-            GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
-
-            if(!parsedResponse.suc)
-                return;
+            //parsedResponse.correctTimeStamp(elapsedTime);
             callback(parsedResponse);
         });
     }
@@ -153,7 +125,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[BONUS_REQ] sendBonusReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendBonusReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/reqattbonus", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/reqattbonus", params, (response, elapsedTime) => {
             const parsedResponse = new GameBonusPacket(response);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
             parsedResponse.correctTimeStamp(elapsedTime);
@@ -169,7 +141,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[UPDATE_NICK_REQ] sendUpdateNickReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendUpdateNickReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/requpdatenick", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/requpdatenick", params, (response, elapsedTime) => {
             const parsedResponse = new GameUpdateNickPacket(response);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
             parsedResponse.correctTimeStamp(elapsedTime);
@@ -185,7 +157,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[UPDATE_TON_ADDR_REQ] sendUpdateTonAddrReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendUpdateTonAddrReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/requpdatetonaddr", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/requpdatetonaddr", params, (response, elapsedTime) => {
             const parsedResponse = new GameUpdateTonAddr(response);
             parsedResponse.correctTimeStamp(elapsedTime);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
@@ -201,7 +173,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[UPDATE_SOL_ADDR_REQ] sendUpdateSolAddrReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendUpdateSolAddrReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/requpdatesoladdr", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/requpdatesoladdr", params, (response, elapsedTime) => {
             const parsedResponse = new GameUpdateSolAddr(response);
             parsedResponse.correctTimeStamp(elapsedTime);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
@@ -217,7 +189,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[UPDATE_X_ACCOUNT_REQ] sendUpdateXAccountReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendUpdateXAccountReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/requpdatexaccount", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/requpdatexaccount", params, (response, elapsedTime) => {
             const parsedResponse = new GameUpdateXAccountPacket(response);            
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
 
@@ -232,7 +204,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[BONUS_REQ] sendRouletteReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendRouletteReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/reqroulette", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/reqroulette", params, (response, elapsedTime) => {
             const parsedResponse = new GameRoulettePacket(response);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
 
@@ -245,7 +217,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         let params = { type: 107, sound_on: onSound };
         Logger.log('sendUpdateSoundReq', params);
 
-        this.postRequest.sendInGamePostRequest("/game/requpdatesound", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/requpdatesound", params, (response, elapsedTime) => {
             const parsedResponse = new GameUpdateSoundPacket(response);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
             GameMainContext.getDefault().initPacket.sound_on = parsedResponse.updated_sound;
@@ -259,21 +231,9 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('[COMP_MISSION_REQ] sendCompMissionReq', params);
 
         UIHud.getDefaultInstance().setErrorMessageLabel("sendCompMissionReq" + params);
-        this.postRequest.sendInGamePostRequest("/game/reqcompmission", params, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/reqcompmission", params, (response, elapsedTime) => {
             const parsedResponse = new GameCompMissionPacket(response);
             GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
-            callback(parsedResponse);
-        });
-    }
-
-    public sendReqInitReq(callback: (gameInitLobbyPacket: GameInitLobbyPacket) => void) {
-        let params = { type: 99 };
-        Logger.log('sendReqInitReq', params);
-
-        //UIHud.getDefaultInstance().setErrorMessageLabel("sendReqInitReq" + params);
-        this.postRequest.sendLobbyPostRequest("/game/reqinitlobby", params, (response, elapsedTime) => {
-            const parsedResponse = new GameInitLobbyPacket(response);
-            //GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
             callback(parsedResponse);
         });
     }
@@ -283,7 +243,7 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         Logger.log('sendReqKeepAliveReq', params);
 
         //UIHud.getDefaultInstance().setErrorMessageLabel("sendReqKeepAliveReq" + params);
-        this.postRequest.sendLobbyPostRequest("/game/reqkeepalive", params, (response, elapsedTime) => {
+        this.postRequest.sendLobbyPostRequest("/airdrop/reqkeepalive", params, (response, elapsedTime) => {
             const parsedResponse = new GameReqKeepAlivePacket(response);
             //GameMainContext.getDefault().CheckErrorAlert(parsedResponse.err_code, parsedResponse.err_msg, parsedResponse.err_act);
             callback(parsedResponse);

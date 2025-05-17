@@ -39,7 +39,7 @@ export class GameplayState extends GameState
             //GameActorControl.getDefaultInstance().PepeActor.actorTransform.setFinishPosition(0);
             //GameActorControl.getDefaultInstance().DogeActor.actorTransform.setFinishPosition(1);
 
-            GameStateManager.getDefaultInstance().onCheckSendResultReq();
+            //GameStateManager.getDefaultInstance().onCheckSendResultReq();
         }      
         else
         {
@@ -83,7 +83,8 @@ export class GameplayState extends GameState
 
             case PlayState.MOVE_ACTOR:
                 if (this.curTick > 4.5) {
-                    GameAudioManger.getDefaultInstance().playSound("walk", true);
+                    if (GameAudioManger.getDefaultInstance() != null)
+                        GameAudioManger.getDefaultInstance().playSound("walk", true);
                     this.playState = PlayState.FINISH;
                     GameMainContext.getDefault().resultContext.isWin = GameMainContext.getDefault().betActor == GameMainContext.getDefault().resultContext.winActor;
                     GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_MOVE, 0, this.curTick - 4.5);
@@ -99,7 +100,8 @@ export class GameplayState extends GameState
     }
 
     public onCloseState(): void {        
-        GameAudioManger.getDefaultInstance().stopSound("walk");
+        if (GameAudioManger.getDefaultInstance() != null)
+            GameAudioManger.getDefaultInstance().stopSound("walk");
         UIHud.getDefaultInstance().uiAlaram.showBetMessage(false);
     }
 }

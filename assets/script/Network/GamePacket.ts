@@ -8,8 +8,6 @@ export class GameInitPacket {
     public err_code: number;
     public err_msg: string;
     public err_act: number;
-    public recv_t_stamp: number;
-    public send_t_stamp: number;
     public server_t_stamp: number;
 
     // telegram last name + first name.
@@ -20,8 +18,6 @@ export class GameInitPacket {
     // free airdrop count
     public air_cnt: number;
 
-    // ton coin point, Decimal points allowed.
-    public t_points: number;
     // run coin point,
     public r_points: number;
     // ton coin adress
@@ -54,7 +50,6 @@ export class GameInitPacket {
     public game_sec: number;
     public cur_game_no: number;
 
-    public str_json_last_bet_info: string;
     public lastBetInfo: {
         last_bet_game_no: number;
         last_bet_t_points: number;
@@ -62,7 +57,6 @@ export class GameInitPacket {
         isWin: boolean;
     };
 
-    public str_json_last_ten_games: string;
     // Betting results of the user's last 10 games
     public lastTenGames: Array<{
         game_no: number;
@@ -92,12 +86,9 @@ export class GameInitPacket {
         this.err_code = json.err_code;
         this.err_msg = json.err_msg;
         this.err_act = json.err_act;
-        this.recv_t_stamp = json.recv_t_stamp;
-        this.send_t_stamp = json.send_t_stamp;
 
         const resBody = json.res_body;
         this.nick = resBody.nick;
-        this.t_points = Number(resBody.t_points);
         this.r_points = Number(resBody.r_points);
         this.air_cnt = Number(resBody.air_cnt);
         this.ton_addr = resBody.ton_addr;
@@ -117,28 +108,11 @@ export class GameInitPacket {
         // Client starts from 0, server starts from 1.
         // Subtract 1 to match.
         this.cur_game_mode = resBody.cur_game_mode - 1;
-        //this.bet_sec = resBody.bet_sec;
-        //this.wait_sec = resBody.wait_sec;
-        //this.game_sec = resBody.game_sec;
-        
-        // Temporarily set as fixed.
         this.bet_sec = 30;
         this.wait_sec = 10;
         this.game_sec = 20;
         this.cur_game_no = resBody.cur_game_no;
 
-        this.str_json_last_bet_info = resBody.str_json_last_bet_info;
-        this.lastBetInfo = JSON.parse(this.str_json_last_bet_info);
-
-
-
-        this.str_json_last_ten_games = resBody.str_json_last_ten_games || "[]";
-        try {
-            this.lastTenGames = JSON.parse(this.str_json_last_ten_games);
-        } catch (error) {
-            //Logger.error("Failed to parse str_json_last_ten_games:", error);
-            this.lastTenGames = [];
-        }
 
         if (this.lastTenGames != null) {
             let findGame = this.lastTenGames.find(x => x.game_no == this.lastBetInfo.last_bet_game_no);
@@ -168,11 +142,6 @@ export class GameInitPacket {
         });
     }
 
-    public correctTimeStamp(elapsedTime: number) {
-
-        this.server_t_stamp = GameCommon.calServerTimeStamp(elapsedTime, this.send_t_stamp, this.recv_t_stamp);
-    }
-
 
     public getCurrentBetInfo(gameNo: number) {
         return this.lastTenGames.find(game => game.game_no === gameNo);
@@ -192,37 +161,57 @@ export class GameBetPacket {
     public recv_t_stamp: number;
     public send_t_stamp: number;
     public server_t_stamp: number;
-    public bet_game_no: number;
-    public bet_type: number;
-    public left_air_cnt: number;
-    public left_t_points: number;
-    public bet_t_points: number;
     public bet_winner: number;
+
+    public ret_bridge_num: number;
+    public ret_side: number;
+    public ret_winnder: number;
+
+    public win_r_points: number;
+    public win_roulette_points: number;
+
+    public ret_air_cnt: number;
+    public ret_r_points: number;
+    public ret_roulette_points: number;
+
+    public ret_con_win_cnt: number;
+    public ret_total_wins: number;
+    public ret_total_games: number;
+
+    public refer_cnt: number;
 
     constructor(json: any) {
         this.type = json.type;
         this.suc = json.suc;
         this.err_code = json.err_code;
-
         this.err_msg = json.err_msg;
         this.err_act = json.err_act;
-
         this.recv_t_stamp = json.recv_t_stamp;
         this.send_t_stamp = json.send_t_stamp;
+        this.server_t_stamp = json.server_t_stamp;
 
-        const resBody = json.res_body;
-        this.bet_type = Number(resBody.bet_type);
-        this.left_air_cnt = Number(resBody.left_air_cnt);
-        this.left_t_points = Number(resBody.left_t_points);
-        this.bet_game_no = resBody.bet_game_no;
-        this.bet_t_points = Number(resBody.bet_t_points);
+        const resBody = json.res_body || {};
+
         this.bet_winner = resBody.bet_winner;
-    }
+        this.ret_bridge_num = resBody.ret_bridge_num;
+        this.ret_side = resBody.ret_side;
+        this.ret_winnder = resBody.ret_winnder;
 
-    public correctTimeStamp(elapsedTime: number) {
-        this.server_t_stamp = GameCommon.calServerTimeStamp(elapsedTime, this.send_t_stamp, this.recv_t_stamp);
+        this.win_r_points = resBody.win_r_points;
+        this.win_roulette_points = resBody.win_roulette_points;
+
+        this.ret_air_cnt = resBody.ret_air_cnt;
+        this.ret_r_points = resBody.ret_r_points;
+        this.ret_roulette_points = resBody.ret_roulette_points;
+
+        this.ret_con_win_cnt = resBody.ret_con_win_cnt;
+        this.ret_total_wins = resBody.ret_total_wins;
+        this.ret_total_games = resBody.ret_total_games;
+
+        this.refer_cnt = resBody.refer_cnt;
     }
 }
+
 
 export class GameResultPacket {
     public type: number;
