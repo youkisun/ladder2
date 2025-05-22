@@ -59,25 +59,25 @@ export class GameplayState extends GameState
             case PlayState.SHOW_LADDER_0:
                 if (this.curTick > 1.5) {
                     const uiPath = UIPath.getDefaultInstance();
-                    uiPath.showResultCoin(true, GameMainContext.getDefault().resultContext.winResultPos);
+                    uiPath.showResultCoin(true, GameResultContext.getDefault().winResultPos);
                     
                     UIHud.getDefaultInstance().uiAlaram.showStatusMessage(false);
                     this.playState = PlayState.SHOW_LADDER_1;
-                    PathMaker.getDefaultInstance().setPath(0, GameMainContext.getDefault().resultContext.pathFlags[0]);
+                    PathMaker.getDefaultInstance().setPath(0, GameResultContext.getDefault().pathFlags[0]);
                 }
                 break;
 
             case PlayState.SHOW_LADDER_1:
                 if (this.curTick > 2.5) {
                     this.playState = PlayState.SHOW_LADDER_2;
-                    PathMaker.getDefaultInstance().setPath(1, GameMainContext.getDefault().resultContext.pathFlags[1]);
+                    PathMaker.getDefaultInstance().setPath(1, GameResultContext.getDefault().pathFlags[1]);
                 }
                 break;
 
             case PlayState.SHOW_LADDER_2:
                 if (this.curTick > 3.5) {
                     this.playState = PlayState.MOVE_ACTOR;
-                    PathMaker.getDefaultInstance().setPath(2, GameMainContext.getDefault().resultContext.pathFlags[2]);
+                    PathMaker.getDefaultInstance().setPath(2, GameResultContext.getDefault().pathFlags[2]);
                 }
                 break;
 
@@ -86,7 +86,7 @@ export class GameplayState extends GameState
                     if (GameAudioManger.getDefaultInstance() != null)
                         GameAudioManger.getDefaultInstance().playSound("walk", true);
                     this.playState = PlayState.FINISH;
-                    GameMainContext.getDefault().resultContext.isWin = GameMainContext.getDefault().betActor == GameMainContext.getDefault().resultContext.winActor;
+                    GameResultContext.getDefault().isWin = GameMainContext.getDefault().betActor == GameResultContext.getDefault().winActor;
                     GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_MOVE, 0, this.curTick - 4.5);
                     GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_MOVE, 1, this.curTick - 4.5);
 

@@ -20,6 +20,7 @@ import { GameCommon, Logger } from "../Common/GameCommon";
 import { GameRandom } from "../Utils/GameRandom";
 import { random } from "cc";
 import { GameMissionNotiControl } from "./GameMissionNotiControl";
+import { GameResultContext } from "./GameResultContext";
 
 export class LadderContext {
     public static TYPE_START_LEFT = 0;
@@ -111,49 +112,7 @@ export interface LadderResult {
     paths: boolean[];
 }
 
-export class GameResultContext {
-    public isWin: boolean = false;
-    public pathFlags: boolean[] = new Array(3).fill(false);
-    public winActor: number = 0;
-    public winResultPos: number = 0;
-    public isShowResultDirect: boolean = false;
-    public gameNo: number;
 
-    public leftResultPosIndex: number = 0;
-    public rightResultPosIndex: number = 0;
-
-    public setPath(bridge_num: number) {
-        this.pathFlags.fill(false);
-
-        if (typeof this.gameNo === "undefined") {
-            return;
-        }
-
-        let random = new GameRandom(this.gameNo.toString());
-
-        if (bridge_num == 1) {
-            const randomIndex = Math.floor(random.nextInRange(0, this.pathFlags.length - 1));
-            this.pathFlags[randomIndex] = true;
-        }
-        else if (bridge_num == 2) {
-            // Initialize the array (always set size to 3)
-            this.pathFlags = [false, false, false];
-
-            // Randomly set two positions to true
-            let count = 0;
-            while (count < 2) {
-                let index = Math.floor(random.nextInRange(0, 2)); // Choose one of 0, 1, 2
-                if (!this.pathFlags[index]) { // Prevent duplicates
-                    this.pathFlags[index] = true;
-                    count++;
-                }
-            }
-        }
-        else {
-            this.pathFlags = [true, true, true];
-        }
-    }
-}
 
 
 export class GameMainContext extends Default<GameMainContext> {
@@ -169,8 +128,7 @@ export class GameMainContext extends Default<GameMainContext> {
     public runPoint: number = -1;
     public roulettePoint: number = 0;
     public airdropCredit: number = 0;
-    public betTonPoint: number = 0;
-    public resultContext: GameResultContext = new GameResultContext();
+    public betTonPoint: number = 0;    
     public isShowPlaying: boolean = false;
     public isInit: boolean = false;
     public userid: number;
@@ -198,7 +156,7 @@ export class GameMainContext extends Default<GameMainContext> {
     }
 
     public isReadyMode(): boolean {
-        return this.initPacket.isContainLastBetInfo() || this.resultContext.winActor == 0;
+        return this.initPacket.isContainLastBetInfo() || GameResultContext.getDefault().winActor == 0;
     }
 
     public getMyBetPastGameResults(): Array<{
@@ -384,10 +342,9 @@ export class GameMainContext extends Default<GameMainContext> {
         }
     }
 
-    public setOnSetInit(initPacket: GameInitPacket, isInitialize: boolean) {
+    public setOnSetInit(initPacket: GameInitPacket) {
         const gameStateMgr = GameStateManager.getDefaultInstance();
-        this.initPacket = initPacket;        
-        //this.setTonPoint(initPacket.t_points);
+        this.initPacket = initPacket;                
         this.setTonAddress(initPacket.ton_addr);
         this.setUID(initPacket.t_id);
         this.setRoulettePoint(initPacket.roulette_points);
@@ -398,9 +355,7 @@ export class GameMainContext extends Default<GameMainContext> {
 
         let isSetRunPoint = false;
 
-        // Initialize on first connection.
-        if (isInitialize) {
-            const mainContext = GameMainContext.getDefault();
+        const mainContext = GameMainContext.getDefault();
             mainContext.clearGameRound();
 
             let showBonus = initPacket.att_bonus_cnt > 0;
@@ -461,10 +416,6 @@ export class GameMainContext extends Default<GameMainContext> {
                         }
                     });
             }
-        }
-        else {
-
-        }
 
         if (!isSetRunPoint)
             this.setRunPoint(initPacket.r_points, false, true);
@@ -478,22 +429,12 @@ export class GameMainContext extends Default<GameMainContext> {
         //GameTimeManager.getInstance().setServerTime(betPacket.server_t_stamp);
     }
 
-    public setOnResultPacket(resultPacket: GameResultPacket) {
-
-        this.resultContext.winActor = resultPacket.winner;
-        this.resultContext.winResultPos = resultPacket.side;
-        this.resultContext.isWin = resultPacket.winner == this.betActor;
-        this.resultContext.gameNo = resultPacket.game_no;
-        this.resultContext.setPath(resultPacket.bridge_num);
-
-        Logger.log("SET WINNER :" + resultPacket.winner);
-        //GameTimeManager.getInstance().setServerTime(resultPacket.server_t_stamp);
-    }
-
     public clearGameRound() {
+
+        GameResultContext.getDefault().clearRound();
+
         this.setBetActor(0);
-        this.resultContext.isWin = false;
-        this.resultContext.winActor = 0;
+        
         Logger.log("CLEAR WINNER :");
         this.setBetActor(0);
         this.setBetAmount(0);
@@ -513,7 +454,6 @@ export class GameMainContext extends Default<GameMainContext> {
         this.roulettePoint = 0;
         this.airdropCredit = 0;
         this.betTonPoint = 0;
-        this.resultContext = new GameResultContext();
         this.isShowPlaying = false;
         this.isInit = false;
         this.userid = 0;

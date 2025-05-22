@@ -47,11 +47,11 @@ export class GameResultState extends GameState {
             let state = GameActorControl.getDefaultInstance().getState();
             if (state != ActorState.ACTOR_STATE_ARRIVE) {
                 const uiPath = UIPath.getDefaultInstance();
-                uiPath.showResultCoin(true, GameMainContext.getDefault().resultContext.winResultPos, 1);
-                GameMainContext.getDefault().resultContext.isWin = GameMainContext.getDefault().betActor == GameMainContext.getDefault().resultContext.winActor;
-                PathMaker.getDefaultInstance().setPath(0, GameMainContext.getDefault().resultContext.pathFlags[0]);
-                PathMaker.getDefaultInstance().setPath(1, GameMainContext.getDefault().resultContext.pathFlags[1]);
-                PathMaker.getDefaultInstance().setPath(2, GameMainContext.getDefault().resultContext.pathFlags[2]);
+                uiPath.showResultCoin(true, GameResultContext.getDefault().winResultPos, 1);
+                GameResultContext.getDefault().isWin = GameMainContext.getDefault().betActor == GameResultContext.getDefault().winActor;
+                PathMaker.getDefaultInstance().setPath(0, GameResultContext.getDefault().pathFlags[0]);
+                PathMaker.getDefaultInstance().setPath(1, GameResultContext.getDefault().pathFlags[1]);
+                PathMaker.getDefaultInstance().setPath(2, GameResultContext.getDefault().pathFlags[2]);
                 GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_READY, 0);
                 GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_READY, 1);
                 GameActorControl.getDefaultInstance().SetActorState(ActorState.ACTOR_STATE_MOVE, 0, 100);
@@ -63,7 +63,7 @@ export class GameResultState extends GameState {
             //UIHud.getDefaultInstance().showLoading(false);
             uiHud.setShowWaitPopup(false);
             if (GameMainContext.getDefault().betActor != 0) {
-                const isVictory = GameMainContext.getDefault().resultContext.isWin;
+                const isVictory = GameResultContext.getDefault().isWin;
                 uiHud.uiAlaram.showStatusMessage(true, isVictory ? 3 : 4);
 
                 if (isVictory) {

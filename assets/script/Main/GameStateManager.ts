@@ -117,14 +117,7 @@ export class GameStateManager extends DefaultComponent<GameStateManager> {
         new GameResultState(),
     ];
 
-    public setInit(packet: GameInitPacket, isInitialize: boolean = false) {
-        //GameTimeManager.getInstance().setServerTime(packet.server_t_stamp);
-        if (isInitialize) {
-            if (this._curState != -1) {
-                this._gameState[this._curState].onCloseState();
-            }
-        }
-
+    public setInit(packet: GameInitPacket) {
         this._curState = -1;
         this._prevState = -1;
         this.BETTING_TIME = packet.bet_sec;

@@ -29,8 +29,6 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         }
     }
 
-    
-
     private setDebugLog(text: string, gameNo: number) {
         const formatter = new Intl.DateTimeFormat("ko-KR", {
             timeZone: "UTC",
@@ -47,56 +45,41 @@ export class GameNetwork extends DefaultComponent<GameNetwork> {
         UIHud.getDefaultInstance().debugUTCLabel.string = "UTC:" + utcTime + `\nGAME.NO:${gameNo}\n${text}\n`;
     }
 
-    public SendInitReq(isInitialize: boolean = false) {
+    public SendInitReq() {
         Logger.log(`[INIT_REQ] SendInitReq`);
-        this.setDebugLog(`-SendInitReq- init:${isInitialize}`, GameStateManager.getDefaultInstance().getCurrentGameNo());
-        this._sendInitReq(isInitialize, (initPacket) => {
+        this.setDebugLog(`-SendInitReq- `, GameStateManager.getDefaultInstance().getCurrentGameNo());
+        this._sendInitReq((initPacket) => {
 
             if (initPacket.err_code != 0) {
                 const errorMsg = `[INIT_REQ] Game initialization failed - err_code : ${initPacket.err_code}`;
                 Logger.error(errorMsg);
                 GameMainContext.getDefault().isInit = false;
-                GameMainContext.getDefault().CheckErrorAlert(initPacket.err_code, initPacket.err_msg, initPacket.err_act);
-                //UIHud.getDefaultInstance().showLoading(false);
+                GameMainContext.getDefault().CheckErrorAlert(initPacket.err_code, initPacket.err_msg, initPacket.err_act);                
                 return;
             }
 
-            if (isInitialize) {
-                if (GameAudioManger.getDefaultInstance() != null)
-                    GameAudioManger.getDefaultInstance().setMute(initPacket.sound_on > 0 ? false : true);
-            }
+            if (GameAudioManger.getDefaultInstance() != null)
+                GameAudioManger.getDefaultInstance().setMute(initPacket.sound_on > 0 ? false : true);
 
             const gameStateMgr = GameStateManager.getDefaultInstance();
-            gameStateMgr.setInit(initPacket, isInitialize);
+            gameStateMgr.setInit(initPacket);
 
             Logger.log(`[INIT_REQ] Initialization successful: initPacket:${initPacket}`);
 
-            GameMainContext.getDefault().setOnSetInit(initPacket, isInitialize);
+            GameMainContext.getDefault().setOnSetInit(initPacket);
             GameMainContext.getDefault().isInit = true;
-
-            //if (isInitialize) {
-            //    //gameStateMgr.playState();
-            //    UIHud.getDefaultInstance().showLoading(false);
-            //}
 
             UIHud.getDefaultInstance().uiRecordInform.setRecordItems();
 
         });
     }
 
-    private _sendInitReq(isInitialize: boolean, callback: (gameInitPacket: GameInitPacket) => void) {
+    private _sendInitReq(callback: (gameInitPacket: GameInitPacket) => void) {
         Logger.log('[INIT_REQ] Game initialization packet request');
         UIHud.getDefaultInstance().setErrorMessageLabel("sendInitReq");
-        let initValue = isInitialize ? 1 : 0;
         
-        this.postRequest.sendInGamePostRequest("/airdrop/reqinitgame", { type: 100, st_init: initValue }, (response, elapsedTime) => {
+        this.postRequest.sendInGamePostRequest("/airdrop/reqinitgame", { type: 100, st_init: true }, (response, elapsedTime) => {
             const parsedResponse = new GameInitPacket(response);
-
-            //if(parsedResponse.suc)
-            //{
-            //    parsedResponse.correctTimeStamp(elapsedTime);    
-            //}
-            
             callback(parsedResponse);
         });
     }

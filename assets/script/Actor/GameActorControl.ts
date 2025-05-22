@@ -5,6 +5,7 @@ import { PathMaker } from "../Path/PathMaker";
 import { GameMainContext } from "../Main/GameMainContext";
 import { UIPath } from "../UI/UIPath";
 import { GameAudioManger } from "../Main/GameAudioManger";
+import { GameResultContext } from "../Main/GameResultContext";
 
 const { ccclass, property } = _decorator;
 
@@ -73,8 +74,10 @@ export class GameActorControl extends DefaultComponent<GameActorControl> {
             }
             
         } else if (actorState === ActorState.ACTOR_STATE_ARRIVE) {
-            this.leftActor.playAnimation(GameMainContext.getDefault().resultContext.winActor == 1 ? 2 : 3);
-            this.rightActor.playAnimation(GameMainContext.getDefault().resultContext.winActor == 2 ? 2 : 3);
+            this.leftActor.playAnimation(GameResultContext.getDefault().winActor == 1 ? 2 : 3);
+            this.rightActor.playAnimation(GameResultContext.getDefault().winActor == 2 ? 2 : 3);
+
+            
 
             this.leftActor.SetSelectedActorImage(false);
             this.rightActor.SetSelectedActorImage(false);
@@ -96,7 +99,7 @@ export class GameActorControl extends DefaultComponent<GameActorControl> {
                 if (GameAudioManger.getDefaultInstance() != null)
                     GameAudioManger.getDefaultInstance().stopSound("walk");
                 const uiPath = UIPath.getDefaultInstance();
-                uiPath.showResultCoin(true, GameMainContext.getDefault().resultContext.winResultPos, 1);
+                uiPath.showResultCoin(true, GameResultContext.getDefault().winResultPos, 1);
             }
         }
     }

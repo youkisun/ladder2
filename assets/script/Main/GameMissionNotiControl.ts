@@ -27,7 +27,7 @@ export class GameMissionNotiControl extends DefaultComponent<GameMissionNotiCont
     public getWinRoulettePoints(): number
     {        
         let getRoulettePoint = 0;
-        const isVictory = GameMainContext.getDefault().resultContext.isWin;
+        const isVictory = GameResultContext.getDefault().isWin;
         if (isVictory)
         {
             // Rewards based on betting points.  

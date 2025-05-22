@@ -22,7 +22,7 @@ export class GameLoadingScene extends Component {
             this.rootNode.active = false;
 
         if (!(GameLoadingScene as any)._initReqSent) {
-            GameNetwork.getDefaultInstance().SendInitReq(true);
+            GameNetwork.getDefaultInstance().SendInitReq();
             (GameLoadingScene as any)._initReqSent = true;
         }
     }
