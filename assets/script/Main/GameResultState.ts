@@ -11,6 +11,7 @@ import { UIWinAlarmTab } from "../UI/UIWinAlarmTab";
 import { GameAudioManger } from "./GameAudioManger";
 import { PathMaker } from "../Path/PathMaker";
 import { UIPath } from "../UI/UIPath";
+import { GameResultContext } from "./GameResultContext";
 
 export class GameResultState extends GameState {
     private continueCountTick: number = 0;
@@ -30,7 +31,7 @@ export class GameResultState extends GameState {
 
         this.totalTonPoint = 0;
 
-        if (mainContext.resultContext.gameNo != curGameNo) {
+        if (GameResultContext.getDefault().gameNo != curGameNo) {
 
             if (remainTime > 5) {
                 //UIHud.getDefaultInstance().showLoading(true);

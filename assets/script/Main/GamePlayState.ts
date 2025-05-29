@@ -4,6 +4,7 @@ import { UIHud } from "../UI/UIHud";
 import { UIPath } from "../UI/UIPath";
 import { GameAudioManger } from "./GameAudioManger";
 import { GameMainContext, LadderContext } from "./GameMainContext";
+import { GameResultContext } from "./GameResultContext";
 import { GameState } from "./GameState";
 import { GameStateManager } from "./GameStateManager";
 
@@ -32,7 +33,7 @@ export class GameplayState extends GameState
 
         const curGameNo = GameStateManager.getDefaultInstance().getCurrentGameNo();
         
-        if(mainContext.resultContext.gameNo != curGameNo)
+        if(GameResultContext.getDefault().gameNo != curGameNo)
         {            
             uiHud.setShowWaitPopup(true);
             this.playState = PlayState.FINISH;
